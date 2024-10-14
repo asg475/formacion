@@ -5,12 +5,14 @@ from datetime import datetime
 
 app = FastAPI()
 
+
 class Boton:
-    id_previa = 0
+    id_previa = 1
     lista_de_botones = []
 
     def __init__(self, nombre, color):
         
+        self.id =  Boton.id_previa
         self.nombre = nombre
         self.color = color
         self.estado = False
@@ -25,7 +27,7 @@ def crear_boton(nombre: str, color: str):
     for elemento in Boton.lista_de_botones:
         if nombre == elemento.nombre:
             raise HTTPException(status_code=400, detail="Elija otro nombre, ese ya existe")
-        nuevo_boton = Boton(nombre, color)
+    nuevo_boton = Boton(nombre, color)
     return {"mensaje": "Botón creado correctamente", "nombre": nuevo_boton.nombre}
     
 
@@ -49,15 +51,17 @@ def leer_boton(nombre: str):
 def modificar_boton(nombre: str, campo: str, nuevo_valor: Union[str, bool]):
     for boton in Boton.lista_de_botones:
         if boton.nombre == nombre:
-            if campo in boton:
-                boton.campo = nuevo_valor  
-                return {"mensaje": f"Botón '{nombre}' actualizado correctamente", "boton":boton}
-            else:
+           if hasattr(boton, campo):
+                setattr(boton, campo, nuevo_valor)
+                return {"mensaje": f"Botón '{nombre}' actualizado correctamente"}
+           else:
                 raise HTTPException(status_code=400, detail=f"Campo '{campo}' no válido para modificar")
+    
     
     raise HTTPException(status_code=404, detail=f"Botón '{nombre}' no encontrado")
 
-@app.delate("/botones/{nombre}")
+
+@app.delete("/botones/{nombre}")
 def borrar_boton(nombre: str):
     for index, boton in enumerate(Boton.lista_de_botones):
         if boton.nombre == nombre:
