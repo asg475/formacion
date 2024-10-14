@@ -6,7 +6,7 @@ from datetime import datetime
 app = FastAPI()
 
 class Boton:
-    id_previa = 1
+    id_previa = 0
     lista_de_botones = []
 
     def __init__(self, nombre, color):
@@ -20,7 +20,7 @@ class Boton:
         Boton.lista_de_botones.append(self)
 
 
-@app.post("/Botones")
+@app.post("/botones")
 def crear_boton(nombre: str, color: str):
     for elemento in Boton.lista_de_botones:
         if nombre == elemento.nombre:
@@ -29,7 +29,7 @@ def crear_boton(nombre: str, color: str):
     return {"mensaje": "Botón creado correctamente", "nombre": nuevo_boton.nombre}
     
 
-@app.get("/Botones/{nombre}")
+@app.get("/botones/{nombre}")
 def leer_boton(nombre: str): 
     for boton in Boton.lista_de_botones:
         if boton.nombre == nombre:
@@ -45,7 +45,7 @@ def leer_boton(nombre: str):
     raise HTTPException(status_code=404, detail="Botón no encontrado")
 
 
-@app.put("/Botones/{nombre}")
+@app.put("/botones/{nombre}")
 def modificar_boton(nombre: str, campo: str, nuevo_valor: Union[str, bool]):
     for boton in Boton.lista_de_botones:
         if boton.nombre == nombre:
@@ -57,7 +57,7 @@ def modificar_boton(nombre: str, campo: str, nuevo_valor: Union[str, bool]):
     
     raise HTTPException(status_code=404, detail=f"Botón '{nombre}' no encontrado")
 
-@app.delate("/Botones/{nombre}")
+@app.delate("/botones/{nombre}")
 def borrar_boton(nombre: str):
     for index, boton in enumerate(Boton.lista_de_botones):
         if boton.nombre == nombre:
