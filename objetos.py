@@ -27,6 +27,8 @@ def crear_boton(nombre: str, color: str):
     for elemento in Boton.lista_de_botones:
         if nombre == elemento.nombre:
             raise HTTPException(status_code=400, detail="Elija otro nombre, ese ya existe")
+        if not (color.startswith('#') and len(color) == 7):
+             raise HTTPException(status_code=400, detail="Esto no es un color")
     nuevo_boton = Boton(nombre, color)
     return {"mensaje": "Botón creado correctamente", "nombre": nuevo_boton.nombre}
     
